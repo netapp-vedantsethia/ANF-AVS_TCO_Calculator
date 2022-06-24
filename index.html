@@ -12,9 +12,17 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
     <link rel="shortcut icon" href="favicon.ico">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
     <title>AVS ANF TCO Calculator</title>
     <script type="text/javascript">
+        function changeDisplay(id) {
+          item = document.getElementById(id);
+
+          if(item.style.display == "none"){
+            item.style.display = "block";
+          } else{
+            item.style.display = "none";
+          }
+        }
         function getResults() {
             vmcount = parseInt(document.getElementById("vmcount").value);
             vcpupcore = parseInt(document.getElementById("vcpupcore").value);
@@ -22,14 +30,14 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             vramvm = parseInt(document.getElementById("vramvm").value);
             utilstoragevm = parseInt(document.getElementById("utilstoragevm").value);
             addstrgc = parseInt(document.getElementById("addstrgc").value);
-            addstrfs = parseInt(document.getElementById("addstrfs").value);
+            //addstrfs = parseInt(document.getElementById("addstrfs").value);
             addstrgp = parseInt(document.getElementById("addstrgp").value);
 
 
             if(vmcount<=0){
               addstrvmvsan = 0;
             } else {
-              addstrvmvsan = ((utilstoragevm / 1024) * vmcount + addstrgc + addstrfs + addstrgp) / vmcount * 1024;
+              addstrvmvsan = ((utilstoragevm / 1024) * vmcount + addstrgc + addstrgp) / vmcount * 1024;
 
               temp = ((100 / 1024) * 100 + 80 + 80 + 50) / 40 * 1024;
             }
@@ -64,7 +72,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
               profile = "Driven by Memory";
             }
 
-            totreqcapstrg = totcapreq1 + addstrfs + addstrgc + addstrgp;
+            totreqcapstrg = totcapreq1 + addstrgc + addstrgp;
             nohostreqstrg = totreqcapstrg / usablecap;
 
             if(vmcount == 0){
@@ -173,12 +181,12 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             document.getElementById("avs5_totcapreq").innerText = Math.round(totcapreq2);
             document.getElementById("avs6_totcapreq").innerText = Math.round(totcapreq2);
 
-            document.getElementById("avs1_totcapreqvsan").innerText = Math.round(totcapreq1);
-            document.getElementById("avs2_totcapreqvsan").innerText = Math.round(totcapreq2);
-            document.getElementById("avs3_totcapreqvsan").innerText = Math.round(totcapreq2);
-            document.getElementById("avs4_totcapreqvsan").innerText = Math.round(totcapreq2);
-            document.getElementById("avs5_totcapreqvsan").innerText = Math.round(totcapreq2);
-            document.getElementById("avs6_totcapreqvsan").innerText = Math.round(totcapreq2);
+            //document.getElementById("avs1_totcapreqvsan").innerText = Math.round(totcapreq1);
+            //document.getElementById("avs2_totcapreqvsan").innerText = Math.round(totcapreq2);
+            //document.getElementById("avs3_totcapreqvsan").innerText = Math.round(totcapreq2);
+            //document.getElementById("avs4_totcapreqvsan").innerText = Math.round(totcapreq2);
+            //document.getElementById("avs5_totcapreqvsan").innerText = Math.round(totcapreq2);
+            //document.getElementById("avs6_totcapreqvsan").innerText = Math.round(totcapreq2);
 
             document.getElementById("avs1_hostcount").innerText = Math.round(finalhostcount);
             document.getElementById("avs2_hostcount").innerText = Math.round(finalhostcountstrg);
@@ -201,12 +209,12 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             document.getElementById("avs5_vsanover").innerText = Math.round(vsanoverhead5);
             document.getElementById("avs6_vsanover").innerText = "0";
 
-            document.getElementById("avs1_reqvmspace").innerText = Math.round(totcapreq1);
-            document.getElementById("avs2_reqvmspace").innerText = Math.round(totcapreq2);
-            document.getElementById("avs3_reqvmspace").innerText = Math.round(totcapreq2);
-            document.getElementById("avs4_reqvmspace").innerText = Math.round(totcapreq2);
-            document.getElementById("avs5_reqvmspace").innerText = Math.round(totcapreq2);
-            document.getElementById("avs6_reqvmspace").innerText = Math.round(totcapreq2);
+            //document.getElementById("avs1_reqvmspace").innerText = Math.round(totcapreq1);
+            //document.getElementById("avs2_reqvmspace").innerText = Math.round(totcapreq2);
+            //document.getElementById("avs3_reqvmspace").innerText = Math.round(totcapreq2);
+            //document.getElementById("avs4_reqvmspace").innerText = Math.round(totcapreq2);
+            //document.getElementById("avs5_reqvmspace").innerText = Math.round(totcapreq2);
+            //document.getElementById("avs6_reqvmspace").innerText = Math.round(totcapreq2);
 
             document.getElementById("avs1_spacevmvsan").innerText = Math.round(totcapreq1);
             document.getElementById("avs2_spacevmvsan").innerText = Math.round(totcapreq2);
@@ -260,12 +268,12 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
               document.getElementById("avs5_spacefreepervsan").classList.remove('bg-danger','text-white');
             }
 
-            document.getElementById("avs1_profile").innerText = "vSAN only - " + profile;
-            document.getElementById("avs2_profile").innerText = "vSAN only";
-            document.getElementById("avs3_profile").innerText = "vSAN only - " + profile;
-            document.getElementById("avs4_profile").innerText = "vSAN only";
-            document.getElementById("avs5_profile").innerText = "ANF with DR Light";
-            document.getElementById("avs6_profile").innerText = "ANF with DR (No Host)";
+            document.getElementById("avs1_profile").innerText = "AVS-vSAN only - " + profile;
+            document.getElementById("avs2_profile").innerText = "AVS-vSAN only with additional capicity (No 20% free space for vSAN)";
+            document.getElementById("avs3_profile").innerText = "AVS-vSAN with ANF - " + profile + "ANF Premium Tier";
+            document.getElementById("avs4_profile").innerText = "AVS-vSAN with ANF-DR Light ANF Ultra(2)/Premium Tier(6)";
+            document.getElementById("avs5_profile").innerText = "AVS-vSAN with ANF Standard Tier DR Light";
+            document.getElementById("avs6_profile").innerText = "AVS-vSAN with ANF Standard Tier zero DR Footprint";
 
             document.getElementById("avs1_tcoavs").innerText = "$" + numberWithCommas(Math.round(tcooneyearavs1));
             document.getElementById("avs2_tcoavs").innerText = "$" + numberWithCommas(Math.round(tcooneyearavs2));
@@ -281,6 +289,37 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             document.getElementById("avs5_tcoanf").innerText = "$" + numberWithCommas(Math.round(tcooneyearanf5));
             document.getElementById("avs6_tcoanf").innerText = "$" + numberWithCommas(Math.round(tcooneyearanf5));
 
+            mintco = {
+              "avs1_tcototal": tcooneyearavs1,
+              "avs2_tcototal": tcooneyearavs2,
+              "avs3_tcototal": totoneyeartco3,
+              "avs4_tcototal": totoneyeartco4,
+              "avs5_tcototal": totoneyeartco5,
+              "avs6_tcototal": tcooneyearanf5
+            };
+
+            mintcoval = tcooneyearavs1;
+            mintcokey = "avs1_tcototal";
+
+            for (var tco in mintco){
+              console.log(mintco[tco]);
+              if (mintcoval >= mintco[tco]){
+                //console.log(mintco[tco]);
+                mintcoval = mintco[tco];
+                mintcokey = tco;
+              }
+            }
+            //console.log(mintcoval);
+
+            document.getElementById("avs1_tcototal").classList.remove("bg-success", "text-white");
+            document.getElementById("avs2_tcototal").classList.remove("bg-success", "text-white");
+            document.getElementById("avs3_tcototal").classList.remove("bg-success", "text-white");
+            document.getElementById("avs4_tcototal").classList.remove("bg-success", "text-white");
+            document.getElementById("avs5_tcototal").classList.remove("bg-success", "text-white");
+            document.getElementById("avs6_tcototal").classList.remove("bg-success", "text-white");
+
+            document.getElementById(mintcokey).classList.add("bg-success", "text-white");
+
             document.getElementById("avs1_tcototal").innerText = "$" + numberWithCommas(Math.round(tcooneyearavs1));
             document.getElementById("avs2_tcototal").innerText = "$" + numberWithCommas(Math.round(tcooneyearavs2));
             document.getElementById("avs3_tcototal").innerText = "$" + numberWithCommas(Math.round(totoneyeartco3));
@@ -288,21 +327,22 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             document.getElementById("avs5_tcototal").innerText = "$" + numberWithCommas(Math.round(totoneyeartco5));
             document.getElementById("avs6_tcototal").innerText = "$" + numberWithCommas(Math.round(tcooneyearanf5));
 
-            document.getElementById("avs1_anfsizing").innerText = "*";
-            document.getElementById("avs2_anfsizing").innerText = "**";
-            document.getElementById("avs3_anfsizing").innerText = "#";
-            document.getElementById("avs4_anfsizing").innerText = "##";
-            document.getElementById("avs5_anfsizing").innerText = "#*";
-            document.getElementById("avs6_anfsizing").innerText = "##*";
+            //document.getElementById("avs1_anfsizing").innerText = "*";
+            //document.getElementById("avs2_anfsizing").innerText = "**";
+            //document.getElementById("avs3_anfsizing").innerText = "#";
+            //document.getElementById("avs4_anfsizing").innerText = "##";
+            //document.getElementById("avs5_anfsizing").innerText = "#*";
+            //document.getElementById("avs6_anfsizing").innerText = "##*";
 
             document.getElementById("avs1_tcoopt").innerText = "N/A";
             document.getElementById("avs2_tcoopt").innerText = "";
-            document.getElementById("avs3_tcoopt").innerText = Math.ceil(tcoopt3);
-            document.getElementById("avs4_tcoopt").innerText = Math.ceil(tcoopt4);
-            document.getElementById("avs5_tcoopt").innerText = Math.ceil(tcoopt5);
-            document.getElementById("avs6_tcoopt").innerText = Math.ceil(tcoopt6);
+            document.getElementById("avs3_tcoopt").innerText = Math.ceil(tcoopt3) + "%";
+            document.getElementById("avs4_tcoopt").innerText = Math.ceil(tcoopt4) + "%";
+            document.getElementById("avs5_tcoopt").innerText = Math.ceil(tcoopt5) + "%";
+            document.getElementById("avs6_tcoopt").innerText = Math.ceil(tcoopt6) + "%";
 
             }
+
     </script>
 </head>
 
@@ -316,7 +356,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
         <div class="card ml-5 mr-5">
             <div class="card-header">
                 <div class="h5"><img src="anficon.png" class="float-left" height="40"></div>
-                    <div class="float-left"><span class="h5">&nbsp&nbspANF AVS TCO Calculator</span></div>
+                    <div class="float-left"><span class="h5">&nbsp&nbspAzure NetApp Files DataStore TCO Estimator</span></div>
 
             </div>
             <div class="card-body">
@@ -378,42 +418,56 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                   </div>
                 </div>
 
-                <div class="h5">Additional Storage</div>
 
-                <div class="row mb-3">
-                  <!-- <small id="tputwarning" class="form-text text-muted">Storage</small> -->
-                  <div class="col input-group mb-3">
-                      <div class="input-group-prepend">
-                          <span class="my-1 input-group-text">Guest Connected</span>
-                      </div>
-                      <input oninput="getResults()" type="number" class="my-1 mr-sm-1 form-control" placeholder="" value="80" aria-label="Guest Connected" aria-describedby="Guest Connected" id="addstrgc"></input>
-                      <div class="input-group-append btn-group btn-group-toggle" data-toggle="buttons">
-                          <label class="btn btn-primary my-1">TB</label>
-                      </div>
+
+
+                <div class="">
+                  <div class="mb-3">
+                    <a class="text-primary" onclick="changeDisplay('collapseadditionalstorage')">Additional Storage
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                      </svg>
+                    </a>
                   </div>
+                  <div id="collapseadditionalstorage" style="display:none">
+                    <div class="row mb-3">
+                      <!-- <small id="tputwarning" class="form-text text-muted">Storage</small> -->
+                      <div class="col input-group mb-3">
+                          <div class="input-group-prepend">
+                              <span class="my-1 input-group-text">Guest Connected</span>
+                          </div>
+                          <input oninput="getResults()" type="number" class="my-1 mr-sm-1 form-control" placeholder="" value="0" aria-label="Guest Connected" aria-describedby="Guest Connected" id="addstrgc"></input>
+                          <div class="input-group-append btn-group btn-group-toggle" data-toggle="buttons">
+                              <label class="btn btn-primary my-1">TB</label>
+                          </div>
+                      </div>
 
-                  <!-- <small id="tputwarning" class="form-text text-muted">Storage</small> -->
-                  <div class="col input-group mb-3">
-                      <div class="input-group-prepend">
-                          <span class="my-1 input-group-text">File Services</span>
-                      </div>
-                      <input oninput="getResults()" type="number" class="my-1 mr-sm-1 form-control" placeholder="" value="80" aria-label="File Services" aria-describedby="File Services" id="addstrfs"></input>
-                      <div class="input-group-append btn-group btn-group-toggle" data-toggle="buttons">
-                          <label class="btn btn-primary my-1">TB</label>
-                      </div>
-                  </div>
+                      <!-- <small id="tputwarning" class="form-text text-muted">Storage</small> -->
+                      <!-- <div class="col input-group mb-3">
+                          <div class="input-group-prepend">
+                              <span class="my-1 input-group-text">File Services</span>
+                          </div>
+                          <input oninput="getResults()" type="number" class="my-1 mr-sm-1 form-control" placeholder="" value="80" aria-label="File Services" aria-describedby="File Services" id="addstrfs"></input>
+                          <div class="input-group-append btn-group btn-group-toggle" data-toggle="buttons">
+                              <label class="btn btn-primary my-1">TB</label>
+                          </div>
+                      </div> -->
 
-                  <!-- <small id="tputwarning" class="form-text text-muted">Storage</small> -->
-                  <div class="col input-group mb-3">
-                      <div class="input-group-prepend">
-                          <span class="my-1 input-group-text">General Purpose</span>
+                      <!-- <small id="tputwarning" class="form-text text-muted">Storage</small> -->
+                      <div class="col input-group mb-3">
+                          <div class="input-group-prepend">
+                              <span class="my-1 input-group-text">General Purpose</span>
+                          </div>
+                          <input oninput="getResults()" type="number" class="my-1 mr-sm-1 form-control" placeholder="" value="0" aria-label="General Purpose" aria-describedby="General Purpose" id="addstrgp"></input>
+                          <div class="input-group-append btn-group btn-group-toggle" data-toggle="buttons">
+                              <label class="btn btn-primary my-1">TB</label>
+                          </div>
                       </div>
-                      <input oninput="getResults()" type="number" class="my-1 mr-sm-1 form-control" placeholder="" value="50" aria-label="General Purpose" aria-describedby="General Purpose" id="addstrgp"></input>
-                      <div class="input-group-append btn-group btn-group-toggle" data-toggle="buttons">
-                          <label class="btn btn-primary my-1">TB</label>
-                      </div>
+                    </div>
+
                   </div>
                 </div>
+
 
 
 
@@ -424,170 +478,177 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                     <table class='table-bordered table table-sm table-hover' style='table-layout:fixed;font-size:14px;'>
                         <thead class='thead-light'>
                             <tr>
-                                <th class="align-top">Config Type</th>
-                                <th class="align-top">Host Type</th>
+                                <th class="align-top">Profile</th>
+                                <!-- <th class="align-top">Host Type</th> -->
                                 <th class="align-top">VM Count</th>
                                 <th class="align-top">Per VM Storage <br><small class="text-muted">(GB)</small></th>
                                 <th class="align-top">Total Capacity Required</th>
-                                <th class="align-top">Total Capacity Required VSAN</th>
+                                <!-- <th class="align-top">Total Capacity Required VSAN</th> -->
                                 <th class="align-top">Host Count</th>
                                 <th class="align-top">Total Capacity VSAN <br><small class="text-muted">(TB)</small></th>
                                 <th class="align-top">VSAN Overhead <br><small class="text-muted">(TB)</small></th>
-                                <th class="align-top">Required VM Space</th>
+                                <!-- <th class="align-top">Required VM Space</th> -->
                                 <th class="align-top">Space Consumed by VMs-vSAN</th>
                                 <th class="align-top">Space Consumed by VMs-ANF</th>
                                 <th class="align-top">Free Space Available</th>
                                 <th class="align-top">Free Space Percent vSAN</th>
-                                <th class="align-top">Profile</th>
+                                <!-- <th class="align-top">Profile</th> -->
                                 <th class="align-top">TCO One Year AVS</th>
                                 <th class="align-top">TCO One Year ANF</th>
                                 <th class="align-top">Total One Year TCO</th>
-                                <th class="align-top">ANF Sizing</th>
+                                <!-- <th class="align-top">ANF Sizing</th> -->
                                 <th class="align-top">TCO Optimization</th>
                             </tr>
                         </thead>
                         <tr>
-                          <td id="avs1_config">AVS</td>
-                          <td id="avs1_hosttype">AV36</td>
+                          <td class="bg-dark text-white" colspan="15"><center><div class="h5 mb-2 mt-2">AVS with vSAN only</div></center></td>
+                        </tr>
+                        <tr>
+                          <td id="avs1_profile"></td>
+                          <!-- <td id="avs1_hosttype">AV36</td> -->
                           <td id="avs1_vmcount"></td>
                           <td id="avs1_storagevm"></td>
                           <td id="avs1_totcapreq"></td>
-                          <td id="avs1_totcapreqvsan"></td>
+                          <!--  <td id="avs1_totcapreqvsan"></td> -->
                           <td id="avs1_hostcount"></td>
                           <td id="avs1_totcapvsan"></td>
                           <td id="avs1_vsanover"></td>
-                          <td id="avs1_reqvmspace"></td>
+                          <!-- <td id="avs1_reqvmspace"></td> -->
                           <td id="avs1_spacevmvsan"></td>
                           <td id="avs1_spacevmanf">N/A</td>
                           <td id="avs1_spacefree"></td>
                           <td id="avs1_spacefreepervsan"></td>
-                          <td id="avs1_profile"></td>
+                          <!-- <td id="avs1_profile"></td> -->
                           <td id="avs1_tcoavs"></td>
                           <td id="avs1_tcoanf">N/A</td>
                           <td id="avs1_tcototal"></td>
-                          <td id="avs1_anfsizing">*</td>
+                          <!-- <td id="avs1_anfsizing">*</td> -->
                           <td id="avs1_tcoopt">N/A</td>
                         </tr>
                         <tr style="background-color: #e9ecef;">
-                          <td id="avs2_config">AVS-vSAN only</td>
-                          <td id="avs2_hosttype">AV36</td>
+                          <td id="avs2_profile"></td>
+                          <!-- <td id="avs2_hosttype">AV36</td> -->
                           <td id="avs2_vmcount"></td>
                           <td id="avs2_storagevm"></td>
                           <td id="avs2_totcapreq"></td>
-                          <td id="avs2_totcapreqvsan"></td>
+                          <!--  <td id="avs2_totcapreqvsan"></td> -->
                           <td id="avs2_hostcount"></td>
                           <td id="avs2_totcapvsan"></td>
                           <td id="avs2_vsanover"></td>
-                          <td id="avs2_reqvmspace"></td>
+                          <!-- <td id="avs2_reqvmspace"></td> -->
                           <td id="avs2_spacevmvsan"></td>
                           <td id="avs2_spacevmanf">N/A</td>
                           <td id="avs2_spacefree"></td>
                           <td id="avs2_spacefreepervsan"></td>
-                          <td id="avs2_profile"></td>
+                          <!-- <td id="avs2_profile"></td> -->
                           <td id="avs2_tcoavs"></td>
                           <td id="avs2_tcoanf">N/A</td>
                           <td id="avs2_tcototal"></td>
-                          <td id="avs2_anfsizing">*</td>
+                          <!-- <td id="avs2_anfsizing">*</td> -->
                           <td id="avs2_tcoopt">N/A</td>
                         </tr>
                         <tr>
-                          <td id="avs3_config">AVS-vSAN & ANF</td>
-                          <td id="avs3_hosttype">AV36</td>
+                          <td class="bg-dark text-white" colspan="15"><center><div class="h5 mb-2 mt-2">AVS with ANF</div></center></td>
+                        </tr>
+                        <tr>
+                          <td id="avs3_profile"></td>
+                          <!-- <td id="avs3_hosttype">AV36</td> -->
                           <td id="avs3_vmcount"></td>
                           <td id="avs3_storagevm"></td>
                           <td id="avs3_totcapreq"></td>
-                          <td id="avs3_totcapreqvsan"></td>
+                          <!--  <td id="avs3_totcapreqvsan"></td> -->
                           <td id="avs3_hostcount"></td>
                           <td id="avs3_totcapvsan"></td>
                           <td id="avs3_vsanover"></td>
-                          <td id="avs3_reqvmspace"></td>
+                          <!-- <td id="avs3_reqvmspace"></td> -->
                           <td id="avs3_spacevmvsan"></td>
                           <td id="avs3_spacevmanf">N/A</td>
                           <td id="avs3_spacefree"></td>
                           <td id="avs3_spacefreepervsan"></td>
-                          <td id="avs3_profile"></td>
+                          <!-- <td id="avs3_profile"></td> -->
                           <td id="avs3_tcoavs"></td>
                           <td id="avs3_tcoanf">N/A</td>
                           <td id="avs3_tcototal"></td>
-                          <td id="avs3_anfsizing">*</td>
+                          <!-- <td id="avs3_anfsizing">*</td> -->
                           <td id="avs3_tcoopt">N/A</td>
                         </tr>
                         <tr style="background-color: #e9ecef;">
-                          <td id="avs4_config">AVS-vSAN & ANF-DR Light</td>
-                          <td id="avs4_hosttype">AV36</td>
+                          <td id="avs4_profile"></td>
+                          <!-- <td id="avs4_hosttype">AV36</td> -->
                           <td id="avs4_vmcount"></td>
                           <td id="avs4_storagevm"></td>
                           <td id="avs4_totcapreq"></td>
-                          <td id="avs4_totcapreqvsan"></td>
+                          <!--  <td id="avs4_totcapreqvsan"></td> -->
                           <td id="avs4_hostcount"></td>
                           <td id="avs4_totcapvsan"></td>
                           <td id="avs4_vsanover"></td>
-                          <td id="avs4_reqvmspace"></td>
+                          <!--  <td id="avs4_reqvmspace"></td> -->
                           <td id="avs4_spacevmvsan"></td>
                           <td id="avs4_spacevmanf">N/A</td>
                           <td id="avs4_spacefree"></td>
                           <td id="avs4_spacefreepervsan"></td>
-                          <td id="avs4_profile"></td>
+                          <!-- <td id="avs4_profile"></td> -->
                           <td id="avs4_tcoavs"></td>
                           <td id="avs4_tcoanf">N/A</td>
                           <td id="avs4_tcototal"></td>
-                          <td id="avs4_anfsizing">*</td>
+                          <!-- <td id="avs4_anfsizing">*</td> -->
                           <td id="avs4_tcoopt">N/A</td>
                         </tr>
                         <tr>
-                          <td id="avs5_config">AVS-vSAN & ANF-DR Light</td>
-                          <td id="avs5_hosttype">AV36</td>
+                          <td id="avs5_profile"></td>
+                          <!-- <td id="avs5_hosttype">AV36</td> -->
                           <td id="avs5_vmcount"></td>
                           <td id="avs5_storagevm"></td>
                           <td id="avs5_totcapreq"></td>
-                          <td id="avs5_totcapreqvsan"></td>
+                          <!--  <td id="avs5_totcapreqvsan"></td> -->
                           <td id="avs5_hostcount"></td>
                           <td id="avs5_totcapvsan"></td>
                           <td id="avs5_vsanover"></td>
-                          <td id="avs5_reqvmspace"></td>
+                          <!-- <td id="avs5_reqvmspace"></td> -->
                           <td id="avs5_spacevmvsan"></td>
                           <td id="avs5_spacevmanf">N/A</td>
                           <td id="avs5_spacefree"></td>
                           <td id="avs5_spacefreepervsan"></td>
-                          <td id="avs5_profile"></td>
+                          <!-- <td id="avs5_profile"></td> -->
                           <td id="avs5_tcoavs"></td>
                           <td id="avs5_tcoanf">N/A</td>
                           <td id="avs5_tcototal"></td>
-                          <td id="avs5_anfsizing">*</td>
+                          <!-- <td id="avs5_anfsizing">*</td> -->
                           <td id="avs5_tcoopt">N/A</td>
                         </tr>
                         <tr style="background-color: #e9ecef;">
-                          <td id="avs6_config">AVS-vSAN & ANF-DR</td>
-                          <td id="avs6_hosttype">AV36</td>
+                          <td id="avs6_profile"></td>
+                          <!-- <td id="avs6_hosttype">AV36</td> -->
                           <td id="avs6_vmcount"></td>
                           <td id="avs6_storagevm"></td>
                           <td id="avs6_totcapreq"></td>
-                          <td id="avs6_totcapreqvsan"></td>
+                          <!--  <td id="avs6_totcapreqvsan"></td> -->
                           <td id="avs6_hostcount"></td>
                           <td id="avs6_totcapvsan"></td>
                           <td id="avs6_vsanover"></td>
-                          <td id="avs6_reqvmspace"></td>
+                          <!-- <td id="avs6_reqvmspace"></td> -->
                           <td id="avs6_spacevmvsan"></td>
                           <td id="avs6_spacevmanf">N/A</td>
                           <td id="avs6_spacefree"></td>
                           <td id="avs6_spacefreepervsan"></td>
-                          <td id="avs6_profile"></td>
+                          <!-- <td id="avs6_profile"></td> -->
                           <td id="avs6_tcoavs"></td>
                           <td id="avs6_tcoanf">N/A</td>
                           <td id="avs6_tcototal"></td>
-                          <td id="avs6_anfsizing">*</td>
+                          <!-- <td id="avs6_anfsizing">*</td> -->
                           <td id="avs6_tcoopt">N/A</td>
                         </tr>
                     </table>
 
 
                     <!-- <small class="text-primary">Blue text indicates volume is sized for throughput.</small><br> -->
-                    <small>* : N/A as first sizing with given output</small><br>
+                    <small>Host type considered for calculations is <b>AV36</b></small><br>
+                    <!-- <small>* : N/A as first sizing with given output</small><br>
                     <small>** : N/A as second sizing with additional capacity (No 20% free space for vSAN)</small><br>
                     <small># : ANF Premium tier</small><br>
                     <small>## : ANF Ultra(2)/Premium Tier(6)</small><br>
                     <small>#* : ANF Standard Tier with DR Light config</small><br>
-                    <small>##* : ANF Standard Tier with zero DR footprint</small><br>
+                    <small>##* : ANF Standard Tier with zero DR footprint</small><br> -->
                 </div>
             </div>
             <div class="card-footer">
