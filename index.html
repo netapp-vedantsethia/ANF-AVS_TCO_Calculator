@@ -13,6 +13,12 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <title>AVS ANF TCO Calculator</title>
+    <style media="screen">
+      .required-field::after {
+          content: "*";
+          color: red;
+      }
+    </style>
     <script type="text/javascript">
         function changeDisplay(id) {
           item = document.getElementById(id);
@@ -30,14 +36,14 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             vramvm = parseInt(document.getElementById("vramvm").value);
             utilstoragevm = parseInt(document.getElementById("utilstoragevm").value);
             addstrgc = parseInt(document.getElementById("addstrgc").value);
-            //addstrfs = parseInt(document.getElementById("addstrfs").value);
+            addstrfs = parseInt(document.getElementById("addstrfs").value);
             addstrgp = parseInt(document.getElementById("addstrgp").value);
 
 
             if(vmcount<=0){
               addstrvmvsan = 0;
             } else {
-              addstrvmvsan = ((utilstoragevm / 1024) * vmcount + addstrgc + addstrgp) / vmcount * 1024;
+              addstrvmvsan = ((utilstoragevm / 1024) * vmcount + addstrfs + addstrgc + addstrgp) / vmcount * 1024;
 
               temp = ((100 / 1024) * 100 + 80 + 80 + 50) / 40 * 1024;
             }
@@ -72,7 +78,13 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
               profile = "Driven by Memory";
             }
 
-            totreqcapstrg = totcapreq1 + addstrgc + addstrgp;
+            if(nohostreqcpured > hostreqpercalc){
+              finalhostcountanf = nohostreqcpured;
+            }else {
+              finalhostcountanf = hostreqpercalc;
+            }
+
+            totreqcapstrg = totcapreq1 + addstrgc + addstrgp + addstrfs;
             nohostreqstrg = totreqcapstrg / usablecap;
 
             if(vmcount == 0){
@@ -81,53 +93,58 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
               pervmstrg = totreqcapstrg / vmcount * 1024;
             }
 
-            if(nohostreqcpured > nohostreqstrg && nohostreqcpured > nohostreq){
+            if(nohostreqcpured > hostreqpercalc && nohostreqcpured > nohostreq){
               finalhostcountstrg = nohostreqcpured;
-            } else if (nohostreq > nohostreqstrg) {
+            } else if (nohostreq > hostreqpercalc) {
               finalhostcountstrg = nohostreq;
             }else {
-              finalhostcountstrg = nohostreqstrg;
+              finalhostcountstrg = hostreqpercalc;
             }
 
             //tot cap vSAN
             totcapvsan1 = finalhostcount * 15.36;
             totcapvsan2 = finalhostcountstrg * 15.36;
+            totcapvsan3 = finalhostcountanf * 15.36;
             totcapvsan5 = 15.36 * 3;
 
             //vsan Overhead
             vsanoverhead1 = totcapvsan1 * 30 / 100;
             vsanoverhead2 = totcapvsan2 * 25 / 100;
-            vsanoverhead3 = totcapvsan1 * 25 / 100;
+            vsanoverhead3 = totcapvsan3 * 25 / 100;
             vsanoverhead5 = totcapvsan5 * 25 / 100;
 
             //space consumed vm vsan
-            spaceconvmvsan = (totcapvsan1 - vsanoverhead3) * 70 / 100;
+            spaceconvmvsan = (totcapvsan3 - vsanoverhead3) * 70 / 100;
             spaceconvmanf = totcapreq2 - spaceconvmvsan;
 
             //free space
             freespaceav1 = totcapvsan1 - (vsanoverhead1 + totcapreq1);
             freespaceav2 = totcapvsan2 - (vsanoverhead2 + totcapreq2);
-            freespaceav3 = totcapvsan1 - (vsanoverhead3 + spaceconvmvsan);
+            freespaceav3 = totcapvsan3 - (vsanoverhead3 + spaceconvmvsan);
             freespaceav5 = totcapvsan5 - (vsanoverhead5 + 20);
 
             //free space percent vsan
             if(totcapvsan1 == 0){
               freespaceper1 = 0;
-              freespaceper3 = 0;
             }else {
               freespaceper1 = freespaceav1 / totcapvsan1 * 100;
-              freespaceper3 = freespaceav3 / totcapvsan1 * 100;
             }
             if(totcapvsan2 == 0){
               freespaceper2 = 0;
             }else {
               freespaceper2 = freespaceav2 / totcapvsan2 * 100;
             }
+            if(totcapvsan3 == 0){
+              freespaceper3 = 0;
+            }else {
+              freespaceper3 = freespaceav3 / totcapvsan3 * 100;
+            }
             freespaceper5 = freespaceav5 / totcapvsan5 * 100;
 
             //tco one year avs
             tcooneyearavs1 = finalhostcount * 93539.28;
             tcooneyearavs2 = finalhostcountstrg * 93539.28;
+            tcooneyearavs3 = finalhostcountanf * 93539.28;
             tcooneyearavs5 = 280617.84;
 
             //tco one year anf
@@ -139,8 +156,8 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             tcooneyearanf5 = totcapreq2 * 0.16206 * 1024 * 12;
 
             //total one year tco
-            totoneyeartco3 = tcooneyearavs1 + tcooneyearanf3;
-            totoneyeartco4 = tcooneyearavs1 + tcooneyearanf4;
+            totoneyeartco3 = tcooneyearavs3 + tcooneyearanf3;
+            totoneyeartco4 = tcooneyearavs3 + tcooneyearanf4;
             totoneyeartco5 = tcooneyearavs5 + tcooneyearanf5;
 
             //tco Optimization
@@ -190,15 +207,15 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
 
             document.getElementById("avs1_hostcount").innerText = Math.round(finalhostcount);
             document.getElementById("avs2_hostcount").innerText = Math.round(finalhostcountstrg);
-            document.getElementById("avs3_hostcount").innerText = Math.round(finalhostcount);
-            document.getElementById("avs4_hostcount").innerText = Math.round(finalhostcount);
+            document.getElementById("avs3_hostcount").innerText = Math.round(finalhostcountanf);
+            document.getElementById("avs4_hostcount").innerText = Math.round(finalhostcountanf);
             document.getElementById("avs5_hostcount").innerText = "3";
             document.getElementById("avs6_hostcount").innerText = "0";
 
             document.getElementById("avs1_totcapvsan").innerText = Math.round(totcapvsan1);
             document.getElementById("avs2_totcapvsan").innerText = Math.round(totcapvsan2);
-            document.getElementById("avs3_totcapvsan").innerText = Math.round(totcapvsan1);
-            document.getElementById("avs4_totcapvsan").innerText = Math.round(totcapvsan1);
+            document.getElementById("avs3_totcapvsan").innerText = Math.round(totcapvsan3);
+            document.getElementById("avs4_totcapvsan").innerText = Math.round(totcapvsan3);
             document.getElementById("avs5_totcapvsan").innerText = Math.round(totcapvsan5);
             document.getElementById("avs6_totcapvsan").innerText = "0";
 
@@ -269,16 +286,16 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             }
 
             document.getElementById("avs1_profile").innerText = "AVS-vSAN only - " + profile;
-            document.getElementById("avs2_profile").innerText = "AVS-vSAN only with additional capicity (No 20% free space for vSAN)";
-            document.getElementById("avs3_profile").innerText = "AVS-vSAN with ANF - " + profile + "ANF Premium Tier";
-            document.getElementById("avs4_profile").innerText = "AVS-vSAN with ANF-DR Light ANF Ultra(2)/Premium Tier(6)";
-            document.getElementById("avs5_profile").innerText = "AVS-vSAN with ANF Standard Tier DR Light";
-            document.getElementById("avs6_profile").innerText = "AVS-vSAN with ANF Standard Tier zero DR Footprint";
+            document.getElementById("avs2_profile").innerText = "AVS-vSAN with additional capacity";
+            document.getElementById("avs3_profile").innerText = "AVS-vSAN with ANF with ANF Premium Tier";
+            document.getElementById("avs4_profile").innerText = "AVS-vSAN with ANF Ultra(2)/Premium Tier(6)";
+            document.getElementById("avs5_profile").innerText = "AVS-vSAN with ANF Standard Tier Pilot Light cluster";
+            document.getElementById("avs6_profile").innerText = "AVS-vSAN with ANF Standard Tier zero Host Footprint";
 
             document.getElementById("avs1_tcoavs").innerText = "$" + numberWithCommas(Math.round(tcooneyearavs1));
             document.getElementById("avs2_tcoavs").innerText = "$" + numberWithCommas(Math.round(tcooneyearavs2));
-            document.getElementById("avs3_tcoavs").innerText = "$" + numberWithCommas(Math.round(tcooneyearavs1));
-            document.getElementById("avs4_tcoavs").innerText = "$" + numberWithCommas(Math.round(tcooneyearavs1));
+            document.getElementById("avs3_tcoavs").innerText = "$" + numberWithCommas(Math.round(tcooneyearavs3));
+            document.getElementById("avs4_tcoavs").innerText = "$" + numberWithCommas(Math.round(tcooneyearavs3));
             document.getElementById("avs5_tcoavs").innerText = "$" + numberWithCommas(Math.round(tcooneyearavs5));
             document.getElementById("avs6_tcoavs").innerText = "$0";
 
@@ -302,14 +319,11 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             mintcokey = "avs1_tcototal";
 
             for (var tco in mintco){
-              console.log(mintco[tco]);
               if (mintcoval >= mintco[tco]){
-                //console.log(mintco[tco]);
                 mintcoval = mintco[tco];
                 mintcokey = tco;
               }
             }
-            //console.log(mintcoval);
 
             document.getElementById("avs1_tcototal").classList.remove("bg-success", "text-white");
             document.getElementById("avs2_tcototal").classList.remove("bg-success", "text-white");
@@ -341,6 +355,45 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             document.getElementById("avs5_tcoopt").innerText = Math.ceil(tcoopt5) + "%";
             document.getElementById("avs6_tcoopt").innerText = Math.ceil(tcoopt6) + "%";
 
+            if(tcoopt3 < 0){
+              //document.getElementById("anf_premium").classList.add = "d-none";
+              document.getElementById("anf_premium").style.display = "none";
+              document.getElementById("output_message_pre").innerText = "No optimization using ANF Premium Tier!"
+            } else{
+              //document.getElementById("anf_premium").classList.remove = "d-none";
+              document.getElementById("anf_premium").style.display = "table-row";
+              document.getElementById("output_message_pre").innerText = ""
+            }
+
+            if(tcoopt4 < 0){
+              //document.getElementById("anf_ultra").classList.add = "d-none";
+              document.getElementById("anf_ultra").style.display = "none";
+              document.getElementById("output_message_ult").innerText = "No optimization using ANF Premium/Ultra Tier!"
+            }else{
+              //document.getElementById("anf_ultra").classList.remove = "d-none";
+              document.getElementById("anf_ultra").style.display = "table-row";
+              document.getElementById("output_message_ult").innerText = ""
+            }
+
+            if(tcoopt5 < 0){
+              //document.getElementById("anf_ultra").classList.add = "d-none";
+              document.getElementById("anf_standard").style.display = "none";
+              document.getElementById("output_message_std").innerText = "No optimization using ANF Standard Tier!"
+            }else{
+              //document.getElementById("anf_ultra").classList.remove = "d-none";
+              document.getElementById("anf_standard").style.display = "table-row";
+              document.getElementById("output_message_std").innerText = ""
+            }
+            if(tcoopt6 < 0){
+              //document.getElementById("anf_ultra").classList.add = "d-none";
+              document.getElementById("anf_standard_zero").style.display = "none";
+              document.getElementById("output_message_std_zero").innerText = "No optimization using ANF Standard Tier zero Host Footprint!"
+            }else{
+              //document.getElementById("anf_ultra").classList.remove = "d-none";
+              document.getElementById("anf_standard_zero").style.display = "table-row";
+              document.getElementById("output_message_std_zero").innerText = ""
+            }
+
             }
 
     </script>
@@ -367,18 +420,18 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                 <div class="row">
                   <div class="col input-group mb-3">
                       <div class="input-group-prepend">
-                          <span class="my-1 input-group-text">Total VMs</span>
+                          <span class="my-1 input-group-text required-field">Total VMs</span>
                       </div>
-                      <input oninput="getResults()" type="number" class="my-1 mr-sm-1 form-control" placeholder="" value="40" aria-label="Total VMs" aria-describedby="Volume Size" id="vmcount"></input>
+                      <input oninput="getResults()" type="number" class="my-1 mr-sm-1 form-control" placeholder="" value="40" aria-label="Total VMs" aria-describedby="Volume Size" id="vmcount" required></input>
                   </div>
 
 
                   <!-- <small id="volumewarning" class="form-text text-muted">Minimum volume size is 100GiB. Maximum volume size is 100TiB.</small> -->
                   <div class="col input-group mb-3">
                       <div class="input-group-prepend">
-                          <span class="my-1 input-group-text">vCPU/pCore</span>
+                          <span class="my-1 input-group-text required-field">vCPU/pCore</span>
                       </div>
-                      <input oninput="getResults()" type="number" class="my-1 mr-sm-1 form-control" placeholder="" value="3" aria-label="vCPU/pCore" aria-describedby="vVCPU/pCore" id="vcpupcore"></input>
+                      <input oninput="getResults()" type="number" class="my-1 mr-sm-1 form-control" placeholder="" value="3" aria-label="vCPU/pCore" aria-describedby="vVCPU/pCore" id="vcpupcore" required></input>
                   </div>
                 </div>
                 <div class="row">
@@ -387,18 +440,18 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                     <small id="volumewarning" class="form-text text-muted">CPU</small>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="my-1 input-group-text">vCPUs/VM</span>
+                            <span class="my-1 input-group-text required-field">vCPUs/VM</span>
                         </div>
-                        <input oninput="getResults()" type="number" class="my-1 mr-sm-1 form-control" placeholder="" value="8" aria-label="vCPUs/VM" aria-describedby="vCPUs/VM" id="vcpuvm"></input>
+                        <input oninput="getResults()" type="number" class="my-1 mr-sm-1 form-control" placeholder="" value="8" aria-label="vCPUs/VM" aria-describedby="vCPUs/VM" id="vcpuvm" required></input>
                     </div>
                   </div>
                   <div class="col">
                     <small id="tputwarning" class="form-text text-muted">Memory</small>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="my-1 input-group-text">vRAM/VM</span>
+                            <span class="my-1 input-group-text required-field">vRAM/VM</span>
                         </div>
-                        <input oninput="getResults()" type="number" class="my-1 mr-sm-1 form-control" placeholder="" value="32" aria-label="vRAM/VM" aria-describedby="vRAM/VM" id="vramvm"></input>
+                        <input oninput="getResults()" type="number" class="my-1 mr-sm-1 form-control" placeholder="" value="32" aria-label="vRAM/VM" aria-describedby="vRAM/VM" id="vramvm" required></input>
                         <div class="input-group-append btn-group btn-group-toggle" data-toggle="buttons">
                             <label class="btn btn-primary my-1">GiB</label>
                         </div>
@@ -408,17 +461,15 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                     <small id="tputwarning" class="form-text text-muted">Storage</small>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="my-1 input-group-text">Utilized Storage/VM</span>
+                            <span class="my-1 input-group-text required-field">Utilized Storage/VM</span>
                         </div>
-                        <input oninput="getResults()" type="number" class="my-1 mr-sm-1 form-control" placeholder="" value="100" aria-label="Utilized Storage/VM" aria-describedby="Utilized Storage/VM" id="utilstoragevm"></input>
+                        <input oninput="getResults()" type="number" class="my-1 mr-sm-1 form-control" placeholder="" value="100" aria-label="Utilized Storage/VM" aria-describedby="Utilized Storage/VM" id="utilstoragevm" required></input>
                         <div class="input-group-append btn-group btn-group-toggle" data-toggle="buttons">
                             <label class="btn btn-primary my-1">GiB</label>
                         </div>
                     </div>
                   </div>
                 </div>
-
-
 
 
                 <div class="">
@@ -443,15 +494,15 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                       </div>
 
                       <!-- <small id="tputwarning" class="form-text text-muted">Storage</small> -->
-                      <!-- <div class="col input-group mb-3">
+                      <div class="col input-group mb-3">
                           <div class="input-group-prepend">
                               <span class="my-1 input-group-text">File Services</span>
                           </div>
-                          <input oninput="getResults()" type="number" class="my-1 mr-sm-1 form-control" placeholder="" value="80" aria-label="File Services" aria-describedby="File Services" id="addstrfs"></input>
+                          <input oninput="getResults()" type="number" class="my-1 mr-sm-1 form-control" placeholder="" value="0" aria-label="File Services" aria-describedby="File Services" id="addstrfs"></input>
                           <div class="input-group-append btn-group btn-group-toggle" data-toggle="buttons">
                               <label class="btn btn-primary my-1">TB</label>
                           </div>
-                      </div> -->
+                      </div>
 
                       <!-- <small id="tputwarning" class="form-text text-muted">Storage</small> -->
                       <div class="col input-group mb-3">
@@ -475,10 +526,10 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                 <center><div class="h3 text-primary mb-3">Output</div></center>
 
                 <div id="tableout" style='overflow-x:auto;'>
-                    <table class='table-bordered table table-sm table-hover' style='table-layout:fixed;font-size:14px;'>
+                    <table class='table-bordered table table-sm table-hover' style='table-layout:fixed;font-size:13px;'>
                         <thead class='thead-light'>
                             <tr>
-                                <th class="align-top">Profile</th>
+                                <th class="align-top" width="25%" style="text-align:center">Profile</th>
                                 <!-- <th class="align-top">Host Type</th> -->
                                 <th class="align-top">VM Count</th>
                                 <th class="align-top">Per VM Storage <br><small class="text-muted">(GB)</small></th>
@@ -525,7 +576,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                           <!-- <td id="avs1_anfsizing">*</td> -->
                           <td id="avs1_tcoopt">N/A</td>
                         </tr>
-                        <tr style="background-color: #e9ecef;">
+                        <tr>
                           <td id="avs2_profile"></td>
                           <!-- <td id="avs2_hosttype">AV36</td> -->
                           <td id="avs2_vmcount"></td>
@@ -550,7 +601,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                         <tr>
                           <td class="bg-dark text-white" colspan="15"><center><div class="h5 mb-2 mt-2">AVS with ANF</div></center></td>
                         </tr>
-                        <tr>
+                        <tr id="anf_premium" class="">
                           <td id="avs3_profile"></td>
                           <!-- <td id="avs3_hosttype">AV36</td> -->
                           <td id="avs3_vmcount"></td>
@@ -572,7 +623,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                           <!-- <td id="avs3_anfsizing">*</td> -->
                           <td id="avs3_tcoopt">N/A</td>
                         </tr>
-                        <tr style="background-color: #e9ecef;">
+                        <tr id="anf_ultra" class="">
                           <td id="avs4_profile"></td>
                           <!-- <td id="avs4_hosttype">AV36</td> -->
                           <td id="avs4_vmcount"></td>
@@ -594,7 +645,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                           <!-- <td id="avs4_anfsizing">*</td> -->
                           <td id="avs4_tcoopt">N/A</td>
                         </tr>
-                        <tr>
+                        <tr id="anf_standard" class="">
                           <td id="avs5_profile"></td>
                           <!-- <td id="avs5_hosttype">AV36</td> -->
                           <td id="avs5_vmcount"></td>
@@ -616,7 +667,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                           <!-- <td id="avs5_anfsizing">*</td> -->
                           <td id="avs5_tcoopt">N/A</td>
                         </tr>
-                        <tr style="background-color: #e9ecef;">
+                        <tr id="anf_standard_zero" class=""> <!-- style="background-color: #e9ecef;" -->
                           <td id="avs6_profile"></td>
                           <!-- <td id="avs6_hosttype">AV36</td> -->
                           <td id="avs6_vmcount"></td>
@@ -639,6 +690,10 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                           <td id="avs6_tcoopt">N/A</td>
                         </tr>
                     </table>
+                    <center><small id="output_message_pre" class="text-danger"></small></center>
+                    <center><small id="output_message_ult" class="text-danger"></small></center>
+                    <center><small id="output_message_std" class="text-danger"></small></center>
+                    <center><small id="output_message_std_zero" class="text-danger"></small></center>
 
 
                     <!-- <small class="text-primary">Blue text indicates volume is sized for throughput.</small><br> -->
@@ -654,7 +709,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             <div class="card-footer">
                 <small class="text-muted"><b>Source</b>: <a href="https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-service-levels">Service Levels</a>, <a href="https://azure.microsoft.com/en-us/pricing/details/netapp/">Pricing</a>, <a href="https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-resource-limits">Resource Limits</a>
                 </small><br>
-                <small class="text-muted"><b>Note</b>: calculator is for estimation purposes only</small>
+                <small class="text-muted"><b>Note</b>: Estimator is for estimation purposes only. Contact <b>Azure CSA's</b> to learn more about optimizing the deployment.</small>
             </div>
         </div>
         <div class="text-right">
