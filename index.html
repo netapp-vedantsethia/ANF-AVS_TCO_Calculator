@@ -116,6 +116,9 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             //space consumed vm vsan
             spaceconvmvsan = (totcapvsan3 - vsanoverhead3) * 70 / 100;
             spaceconvmanf = totcapreq2 - spaceconvmvsan;
+            if(spaceconvmanf < 0){
+              spaceconvmanf = 0;
+            }
 
             //free space
             freespaceav1 = totcapvsan1 - (vsanoverhead1 + totcapreq1);
@@ -355,7 +358,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             document.getElementById("avs5_tcoopt").innerText = Math.ceil(tcoopt5) + "%";
             document.getElementById("avs6_tcoopt").innerText = Math.ceil(tcoopt6) + "%";
 
-            if(tcoopt3 < 0){
+            if(tcoopt3 <= 0){
               //document.getElementById("anf_premium").classList.add = "d-none";
               document.getElementById("anf_premium").style.display = "none";
               document.getElementById("output_message_pre").innerText = "No optimization using ANF Premium Tier!"
@@ -365,7 +368,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
               document.getElementById("output_message_pre").innerText = ""
             }
 
-            if(tcoopt4 < 0){
+            if(tcoopt4 <= 0){
               //document.getElementById("anf_ultra").classList.add = "d-none";
               document.getElementById("anf_ultra").style.display = "none";
               document.getElementById("output_message_ult").innerText = "No optimization using ANF Premium/Ultra Tier!"
@@ -375,7 +378,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
               document.getElementById("output_message_ult").innerText = ""
             }
 
-            if(tcoopt5 < 0){
+            if(tcoopt5 <= 0){
               //document.getElementById("anf_ultra").classList.add = "d-none";
               document.getElementById("anf_standard").style.display = "none";
               document.getElementById("output_message_std").innerText = "No optimization using ANF Standard Tier!"
@@ -384,7 +387,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
               document.getElementById("anf_standard").style.display = "table-row";
               document.getElementById("output_message_std").innerText = ""
             }
-            if(tcoopt6 < 0){
+            if(tcoopt6 <= 0){
               //document.getElementById("anf_ultra").classList.add = "d-none";
               document.getElementById("anf_standard_zero").style.display = "none";
               document.getElementById("output_message_std_zero").innerText = "No optimization using ANF Standard Tier zero Host Footprint!"
