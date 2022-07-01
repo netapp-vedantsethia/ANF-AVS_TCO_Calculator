@@ -53,9 +53,9 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
 
             // calculator logic
             avgcpu = 2300 * vcpuvm;
-            avgpeakcpuutil = avgcpu * 10 / 100;
+            avgpeakcpuutil = avgcpu * 15 / 100;
             totpeakcpuutil = avgpeakcpuutil * vmcount;
-            cpumhzperhost = 2300 * 72 * 90 / 100;
+            cpumhzperhost = 2300 * 72 * 70 / 100;
             if(cpumhzperhost == 0){
               nohostreqcpu = 0;
             } else{
@@ -125,6 +125,18 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             freespaceav2 = totcapvsan2 - (vsanoverhead2 + totcapreq2);
             freespaceav3 = totcapvsan3 - (vsanoverhead3 + spaceconvmvsan);
             freespaceav5 = totcapvsan5 - (vsanoverhead5 + 20);
+            
+            if(freespaceav2 < 0)
+            {
+                do
+              {
+                finalhostcountstrg = finalhostcountstrg + 1;
+                totcapvsan2 = finalhostcountstrg * 15.36;
+                vsanoverhead2 = totcapvsan2 * 25 / 100;
+                freespaceav2 = totcapvsan2 - (vsanoverhead2 + totcapreq2);
+              }while((freespaceav2 < 0));
+            }
+            
 
             //free space percent vsan
             if(totcapvsan1 == 0){
@@ -157,11 +169,13 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             premiumdsfin = datastoresize * 6 * 0.32339 * 1024 * 12;
             tcooneyearanf4 = ultrsdsfin + premiumdsfin;
             tcooneyearanf5 = totcapreq2 * 0.16206 * 1024 * 12;
+            tcooneyearanf7 = spaceconvmanf * 0.16206 * 1024 * 12;
 
             //total one year tco
             totoneyeartco3 = tcooneyearavs3 + tcooneyearanf3;
             totoneyeartco4 = tcooneyearavs3 + tcooneyearanf4;
             totoneyeartco5 = tcooneyearavs5 + tcooneyearanf5;
+            totoneyeartco7 = tcooneyearavs3 + tcooneyearanf7;
 
             //tco Optimization
             if(tcooneyearavs2 == 0){
@@ -169,23 +183,26 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
               tcoopt4 = 0;
               tcoopt5 = 0;
               tcoopt6 = 0;
+              tcoopt7 = 0;
             }else {
               tcoopt3 = 100 - (totoneyeartco3 / tcooneyearavs2) * 100;
               tcoopt4 = 100 - (totoneyeartco4 / tcooneyearavs2) * 100;
               tcoopt5 = 100 - (totoneyeartco5 / tcooneyearavs2) * 100;
               tcoopt6 = 100 - (tcooneyearanf5 / tcooneyearavs2) * 100;
+              tcoopt7 = 100 - (tcooneyearanf7 / tcooneyearavs3) * 100;
             }
 
             function numberWithCommas(x) {
               return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             }
 
-            document.getElementById("avs1_vmcount").innerText = vmcount;
+            /*document.getElementById("avs1_vmcount").innerText = vmcount;
             document.getElementById("avs2_vmcount").innerText = vmcount;
             document.getElementById("avs3_vmcount").innerText = vmcount;
             document.getElementById("avs4_vmcount").innerText = vmcount;
             document.getElementById("avs5_vmcount").innerText = vmcount;
             document.getElementById("avs6_vmcount").innerText = vmcount;
+            document.getElementById("avs7_vmcount").innerText = vmcount;
 
             document.getElementById("avs1_storagevm").innerText = utilstoragevm;
             document.getElementById("avs2_storagevm").innerText = Math.round(addstrvmvsan);
@@ -193,6 +210,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             document.getElementById("avs4_storagevm").innerText = Math.round(addstrvmvsan);
             document.getElementById("avs5_storagevm").innerText = Math.round(addstrvmvsan);
             document.getElementById("avs6_storagevm").innerText = Math.round(addstrvmvsan);
+            document.getElementById("avs7_storagevm").innerText = utilstoragevm;*/
 
             document.getElementById("avs1_totcapreq").innerText = Math.round(totcapreq1);
             document.getElementById("avs2_totcapreq").innerText = Math.round(totcapreq2);
@@ -200,6 +218,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             document.getElementById("avs4_totcapreq").innerText = Math.round(totcapreq2);
             document.getElementById("avs5_totcapreq").innerText = Math.round(totcapreq2);
             document.getElementById("avs6_totcapreq").innerText = Math.round(totcapreq2);
+            document.getElementById("avs7_totcapreq").innerText = Math.round(totcapreq2);
 
             //document.getElementById("avs1_totcapreqvsan").innerText = Math.round(totcapreq1);
             //document.getElementById("avs2_totcapreqvsan").innerText = Math.round(totcapreq2);
@@ -207,6 +226,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             //document.getElementById("avs4_totcapreqvsan").innerText = Math.round(totcapreq2);
             //document.getElementById("avs5_totcapreqvsan").innerText = Math.round(totcapreq2);
             //document.getElementById("avs6_totcapreqvsan").innerText = Math.round(totcapreq2);
+            //document.getElementById("avs7_totcapreqvsan").innerText = Math.round(totcapreq1);
 
             document.getElementById("avs1_hostcount").innerText = Math.round(finalhostcount);
             document.getElementById("avs2_hostcount").innerText = Math.round(finalhostcountstrg);
@@ -214,6 +234,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             document.getElementById("avs4_hostcount").innerText = Math.round(finalhostcountanf);
             document.getElementById("avs5_hostcount").innerText = "3";
             document.getElementById("avs6_hostcount").innerText = "0";
+            document.getElementById("avs7_hostcount").innerText = Math.round(finalhostcountanf);
 
             document.getElementById("avs1_totcapvsan").innerText = Math.round(totcapvsan1);
             document.getElementById("avs2_totcapvsan").innerText = Math.round(totcapvsan2);
@@ -221,6 +242,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             document.getElementById("avs4_totcapvsan").innerText = Math.round(totcapvsan3);
             document.getElementById("avs5_totcapvsan").innerText = Math.round(totcapvsan5);
             document.getElementById("avs6_totcapvsan").innerText = "0";
+            document.getElementById("avs7_totcapvsan").innerText = Math.round(totcapvsan3);
 
             document.getElementById("avs1_vsanover").innerText = Math.round(vsanoverhead1);
             document.getElementById("avs2_vsanover").innerText = Math.round(vsanoverhead2);
@@ -228,6 +250,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             document.getElementById("avs4_vsanover").innerText = Math.round(vsanoverhead3);
             document.getElementById("avs5_vsanover").innerText = Math.round(vsanoverhead5);
             document.getElementById("avs6_vsanover").innerText = "0";
+            document.getElementById("avs7_vsanover").innerText = Math.round(vsanoverhead3);
 
             //document.getElementById("avs1_reqvmspace").innerText = Math.round(totcapreq1);
             //document.getElementById("avs2_reqvmspace").innerText = Math.round(totcapreq2);
@@ -235,6 +258,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             //document.getElementById("avs4_reqvmspace").innerText = Math.round(totcapreq2);
             //document.getElementById("avs5_reqvmspace").innerText = Math.round(totcapreq2);
             //document.getElementById("avs6_reqvmspace").innerText = Math.round(totcapreq2);
+            //document.getElementById("avs7_reqvmspace").innerText = Math.round(totcapreq1);
 
             document.getElementById("avs1_spacevmvsan").innerText = Math.round(totcapreq1);
             document.getElementById("avs2_spacevmvsan").innerText = Math.round(totcapreq2);
@@ -242,6 +266,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             document.getElementById("avs4_spacevmvsan").innerText = Math.round(spaceconvmvsan);
             document.getElementById("avs5_spacevmvsan").innerText = "20";
             document.getElementById("avs6_spacevmvsan").innerText = "N/A";
+            document.getElementById("avs7_spacevmvsan").innerText = Math.round(spaceconvmvsan);
 
             document.getElementById("avs1_spacevmanf").innerText = "N/A";
             document.getElementById("avs2_spacevmanf").innerText = "N/A";
@@ -249,51 +274,57 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             document.getElementById("avs4_spacevmanf").innerText = Math.round(spaceconvmanf);
             document.getElementById("avs5_spacevmanf").innerText = Math.round(totcapreq2);
             document.getElementById("avs6_spacevmanf").innerText = Math.round(totcapreq2);
+            document.getElementById("avs7_spacevmanf").innerText = Math.round(spaceconvmanf);
 
-            document.getElementById("avs1_spacefree").innerText = Math.round(freespaceav1);
-            document.getElementById("avs2_spacefree").innerText = Math.round(freespaceav2);
-            document.getElementById("avs3_spacefree").innerText = Math.round(freespaceav3);
-            document.getElementById("avs4_spacefree").innerText = Math.round(freespaceav3);
-            document.getElementById("avs5_spacefree").innerText = Math.round(freespaceav5);
+            document.getElementById("avs1_spacefree").innerText = Math.round(freespaceav1)+" ("+Math.round(freespaceper1) + "%)";
+            document.getElementById("avs2_spacefree").innerText = Math.round(freespaceav2)+" ("+Math.round(freespaceper2) + "%)";
+            document.getElementById("avs3_spacefree").innerText = Math.round(freespaceav3)+" ("+Math.round(freespaceper3) + "%)";
+            document.getElementById("avs4_spacefree").innerText = Math.round(freespaceav3)+" ("+Math.round(freespaceper3) + "%)";
+            document.getElementById("avs5_spacefree").innerText = Math.round(freespaceav5)+" ("+Math.round(freespaceper5) + "%)";
             document.getElementById("avs6_spacefree").innerText = "N/A";
+            document.getElementById("avs7_spacefree").innerText = Math.round(freespaceav3)+" ("+Math.round(freespaceper3) + "%)";
 
-            document.getElementById("avs1_spacefreepervsan").innerText = Math.round(freespaceper1) + "%";
+            /*document.getElementById("avs1_spacefreepervsan").innerText = Math.round(freespaceper1) + "%";
             document.getElementById("avs2_spacefreepervsan").innerText = Math.round(freespaceper2) + "%";
             document.getElementById("avs3_spacefreepervsan").innerText = Math.round(freespaceper3) + "%";
             document.getElementById("avs4_spacefreepervsan").innerText = Math.round(freespaceper3) + "%";
             document.getElementById("avs5_spacefreepervsan").innerText = Math.round(freespaceper5) + "%";
             document.getElementById("avs6_spacefreepervsan").innerText = "N/A";
+            document.getElementById("avs7_spacefreepervsan").innerText = Math.round(freespaceper3) + "%";*/
 
             //changing the background backgroundColor
             if(Math.round(freespaceper1) <= 20){
-              document.getElementById("avs1_spacefreepervsan").classList.add('bg-danger','text-white');
+              document.getElementById("avs1_spacefree").classList.add('bg-danger','text-white');
             } else{
-              document.getElementById("avs1_spacefreepervsan").classList.remove('bg-danger','text-white');
+              document.getElementById("avs1_spacefree").classList.remove('bg-danger','text-white');
             }
             if (Math.round(freespaceper2) <= 20) {
-              document.getElementById("avs2_spacefreepervsan").classList.add('bg-danger','text-white');
+              document.getElementById("avs2_spacefree").classList.add('bg-danger','text-white');
             } else{
-              document.getElementById("avs2_spacefreepervsan").classList.remove('bg-danger','text-white');
+              document.getElementById("avs2_spacefree").classList.remove('bg-danger','text-white');
             }
             if (Math.round(freespaceper3) <= 20) {
-              document.getElementById("avs3_spacefreepervsan").classList.add('bg-danger','text-white');
-              document.getElementById("avs4_spacefreepervsan").classList.add('bg-danger','text-white');
+              document.getElementById("avs3_spacefree").classList.add('bg-danger','text-white');
+              document.getElementById("avs4_spacefree").classList.add('bg-danger','text-white');
+              document.getElementById("avs7_spacefree").classList.add('bg-danger','text-white');
             } else{
-              document.getElementById("avs3_spacefreepervsan").classList.remove('bg-danger','text-white');
-              document.getElementById("avs4_spacefreepervsan").classList.remove('bg-danger','text-white');
+              document.getElementById("avs3_spacefree").classList.remove('bg-danger','text-white');
+              document.getElementById("avs4_spacefree").classList.remove('bg-danger','text-white');
+              document.getElementById("avs7_spacefree").classList.remove('bg-danger','text-white');
             }
             if (Math.round(freespaceper5) <= 20) {
-              document.getElementById("avs5_spacefreepervsan").classList.add('bg-danger','text-white');
+              document.getElementById("avs5_spacefree").classList.add('bg-danger','text-white');
             } else{
-              document.getElementById("avs5_spacefreepervsan").classList.remove('bg-danger','text-white');
+              document.getElementById("avs5_spacefree").classList.remove('bg-danger','text-white');
             }
 
             document.getElementById("avs1_profile").innerText = "AVS-vSAN only - " + profile;
             document.getElementById("avs2_profile").innerText = "AVS-vSAN with additional capacity";
             document.getElementById("avs3_profile").innerText = "AVS-vSAN with ANF with ANF Premium Tier";
-            document.getElementById("avs4_profile").innerText = "AVS-vSAN with ANF Ultra(2)/Premium Tier(6)";
+            document.getElementById("avs4_profile").innerText = "AVS-vSAN with ANF Ultra(2)/Premium Tier(6) (Perf optimized)";
             document.getElementById("avs5_profile").innerText = "AVS-vSAN with ANF Standard Tier Pilot Light cluster";
             document.getElementById("avs6_profile").innerText = "AVS-vSAN with ANF Standard Tier zero Host Footprint";
+            document.getElementById("avs7_profile").innerText = "AVS-vSAN with ANF Standard";
 
             document.getElementById("avs1_tcoavs").innerText = "$" + numberWithCommas(Math.round(tcooneyearavs1));
             document.getElementById("avs2_tcoavs").innerText = "$" + numberWithCommas(Math.round(tcooneyearavs2));
@@ -301,6 +332,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             document.getElementById("avs4_tcoavs").innerText = "$" + numberWithCommas(Math.round(tcooneyearavs3));
             document.getElementById("avs5_tcoavs").innerText = "$" + numberWithCommas(Math.round(tcooneyearavs5));
             document.getElementById("avs6_tcoavs").innerText = "$0";
+            document.getElementById("avs7_tcoavs").innerText = "$" + numberWithCommas(Math.round(tcooneyearavs3));
 
             document.getElementById("avs1_tcoanf").innerText = "N/A";
             document.getElementById("avs2_tcoanf").innerText = "N/A";
@@ -308,6 +340,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             document.getElementById("avs4_tcoanf").innerText = "$" + numberWithCommas(Math.round(tcooneyearanf4));
             document.getElementById("avs5_tcoanf").innerText = "$" + numberWithCommas(Math.round(tcooneyearanf5));
             document.getElementById("avs6_tcoanf").innerText = "$" + numberWithCommas(Math.round(tcooneyearanf5));
+            document.getElementById("avs7_tcoanf").innerText = "$" + numberWithCommas(Math.round(tcooneyearanf7));
 
             mintco = {
               "avs1_tcototal": tcooneyearavs1,
@@ -315,7 +348,8 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
               "avs3_tcototal": totoneyeartco3,
               "avs4_tcototal": totoneyeartco4,
               "avs5_tcototal": totoneyeartco5,
-              "avs6_tcototal": tcooneyearanf5
+              "avs6_tcototal": tcooneyearanf5,
+              "avs7_tcototal": totoneyeartco7
             };
 
             mintcoval = tcooneyearavs1;
@@ -334,6 +368,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             document.getElementById("avs4_tcototal").classList.remove("bg-success", "text-white");
             document.getElementById("avs5_tcototal").classList.remove("bg-success", "text-white");
             document.getElementById("avs6_tcototal").classList.remove("bg-success", "text-white");
+            document.getElementById("avs7_tcototal").classList.remove("bg-success", "text-white");
 
             document.getElementById(mintcokey).classList.add("bg-success", "text-white");
 
@@ -343,6 +378,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             document.getElementById("avs4_tcototal").innerText = "$" + numberWithCommas(Math.round(totoneyeartco4));
             document.getElementById("avs5_tcototal").innerText = "$" + numberWithCommas(Math.round(totoneyeartco5));
             document.getElementById("avs6_tcototal").innerText = "$" + numberWithCommas(Math.round(tcooneyearanf5));
+            document.getElementById("avs7_tcototal").innerText = "$" + numberWithCommas(Math.round(totoneyeartco7));
 
             //document.getElementById("avs1_anfsizing").innerText = "*";
             //document.getElementById("avs2_anfsizing").innerText = "**";
@@ -357,6 +393,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             document.getElementById("avs4_tcoopt").innerText = Math.ceil(tcoopt4) + "%";
             document.getElementById("avs5_tcoopt").innerText = Math.ceil(tcoopt5) + "%";
             document.getElementById("avs6_tcoopt").innerText = Math.ceil(tcoopt6) + "%";
+            document.getElementById("avs7_tcoopt").innerText = Math.ceil(tcoopt7) + "%";
 
             if(tcoopt3 <= 0){
               //document.getElementById("anf_premium").classList.add = "d-none";
@@ -380,20 +417,29 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
 
             if(tcoopt5 <= 0){
               //document.getElementById("anf_ultra").classList.add = "d-none";
-              document.getElementById("anf_standard").style.display = "none";
+              document.getElementById("anf_dr").style.display = "none";
               document.getElementById("output_message_std").innerText = "No optimization using ANF Standard Tier!"
             }else{
               //document.getElementById("anf_ultra").classList.remove = "d-none";
-              document.getElementById("anf_standard").style.display = "table-row";
+              document.getElementById("anf_dr").style.display = "table-row";
               document.getElementById("output_message_std").innerText = ""
             }
             if(tcoopt6 <= 0){
               //document.getElementById("anf_ultra").classList.add = "d-none";
-              document.getElementById("anf_standard_zero").style.display = "none";
+              document.getElementById("anf_dr_zero").style.display = "none";
               document.getElementById("output_message_std_zero").innerText = "No optimization using ANF Standard Tier zero Host Footprint!"
             }else{
               //document.getElementById("anf_ultra").classList.remove = "d-none";
-              document.getElementById("anf_standard_zero").style.display = "table-row";
+              document.getElementById("anf_dr_zero").style.display = "table-row";
+              document.getElementById("output_message_std_zero").innerText = ""
+            }
+            if(tcoopt7 <= 0){
+              //document.getElementById("anf_standard").classList.add = "d-none";
+              document.getElementById("anf_standard").style.display = "none";
+              document.getElementById("output_message_std_zero").innerText = "No optimization using ANF Standard Tier zero Host Footprint!"
+            }else{
+              //document.getElementById("anf_standard").classList.remove = "d-none";
+              document.getElementById("anf_standard").style.display = "table-row";
               document.getElementById("output_message_std_zero").innerText = ""
             }
 
@@ -534,10 +580,10 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                             <tr>
                                 <th class="align-top" width="25%" style="text-align:center">Profile</th>
                                 <!-- <th class="align-top">Host Type</th> -->
-                                <th class="align-top">VM Count</th>
-                                <th class="align-top">Per VM Storage <br><small class="text-muted">(GB)</small></th>
-                                <th class="align-top">Total Capacity Required</th>
-                                <!-- <th class="align-top">Total Capacity Required VSAN</th> -->
+                                <!-- <th class="align-top">VM Count</th> -->
+                                <!-- <th class="align-top">Per VM Storage <br><small class="text-muted">(GB)</small></th> -->
+                                <!-- <th class="align-top">Total Capacity Required</th> -->
+                                <th class="align-top">Total Capacity Required VSAN</th> 
                                 <th class="align-top">Host Count</th>
                                 <th class="align-top">Total Capacity VSAN <br><small class="text-muted">(TB)</small></th>
                                 <th class="align-top">VSAN Overhead <br><small class="text-muted">(TB)</small></th>
@@ -545,7 +591,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                                 <th class="align-top">Space Consumed by VMs-vSAN</th>
                                 <th class="align-top">Space Consumed by VMs-ANF</th>
                                 <th class="align-top">Free Space Available</th>
-                                <th class="align-top">Free Space Percent vSAN</th>
+                                <!-- <th class="align-top">Free Space Percent vSAN</th> -->
                                 <!-- <th class="align-top">Profile</th> -->
                                 <th class="align-top">TCO One Year AVS</th>
                                 <th class="align-top">TCO One Year ANF</th>
@@ -555,14 +601,14 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                             </tr>
                         </thead>
                         <tr>
-                          <td class="bg-dark text-white" colspan="15"><center><div class="h5 mb-2 mt-2">AVS with vSAN only</div></center></td>
+                          <td class="bg-dark text-white" colspan="12"><center><div class="h5 mb-2 mt-2">AVS with vSAN only</div></center></td>
                         </tr>
                         <tr>
                           <td id="avs1_profile"></td>
                           <!-- <td id="avs1_hosttype">AV36</td> -->
-                          <td id="avs1_vmcount"></td>
-                          <td id="avs1_storagevm"></td>
-                          <td id="avs1_totcapreq"></td>
+                          <!-- <td id="avs1_vmcount"></td> 
+                          <td id="avs1_storagevm"></td> -->
+                          <td id="avs1_totcapreq"></td> 
                           <!--  <td id="avs1_totcapreqvsan"></td> -->
                           <td id="avs1_hostcount"></td>
                           <td id="avs1_totcapvsan"></td>
@@ -571,7 +617,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                           <td id="avs1_spacevmvsan"></td>
                           <td id="avs1_spacevmanf">N/A</td>
                           <td id="avs1_spacefree"></td>
-                          <td id="avs1_spacefreepervsan"></td>
+                          <!-- <td id="avs1_spacefreepervsan"></td> -->
                           <!-- <td id="avs1_profile"></td> -->
                           <td id="avs1_tcoavs"></td>
                           <td id="avs1_tcoanf">N/A</td>
@@ -582,9 +628,9 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                         <tr>
                           <td id="avs2_profile"></td>
                           <!-- <td id="avs2_hosttype">AV36</td> -->
-                          <td id="avs2_vmcount"></td>
-                          <td id="avs2_storagevm"></td>
-                          <td id="avs2_totcapreq"></td>
+                          <!-- <td id="avs2_vmcount"></td>
+                          <td id="avs2_storagevm"></td> -->
+                          <td id="avs2_totcapreq"></td> 
                           <!--  <td id="avs2_totcapreqvsan"></td> -->
                           <td id="avs2_hostcount"></td>
                           <td id="avs2_totcapvsan"></td>
@@ -593,7 +639,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                           <td id="avs2_spacevmvsan"></td>
                           <td id="avs2_spacevmanf">N/A</td>
                           <td id="avs2_spacefree"></td>
-                          <td id="avs2_spacefreepervsan"></td>
+                          <!-- <td id="avs2_spacefreepervsan"></td> -->
                           <!-- <td id="avs2_profile"></td> -->
                           <td id="avs2_tcoavs"></td>
                           <td id="avs2_tcoanf">N/A</td>
@@ -602,14 +648,14 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                           <td id="avs2_tcoopt">N/A</td>
                         </tr>
                         <tr>
-                          <td class="bg-dark text-white" colspan="15"><center><div class="h5 mb-2 mt-2">AVS with ANF</div></center></td>
+                          <td class="bg-dark text-white" colspan="12"><center><div class="h5 mb-2 mt-2">AVS with ANF</div></center></td>
                         </tr>
                         <tr id="anf_premium" class="">
                           <td id="avs3_profile"></td>
                           <!-- <td id="avs3_hosttype">AV36</td> -->
-                          <td id="avs3_vmcount"></td>
-                          <td id="avs3_storagevm"></td>
-                          <td id="avs3_totcapreq"></td>
+                          <!-- <td id="avs3_vmcount"></td>
+                          <td id="avs3_storagevm"></td> -->
+                          <td id="avs3_totcapreq"></td> 
                           <!--  <td id="avs3_totcapreqvsan"></td> -->
                           <td id="avs3_hostcount"></td>
                           <td id="avs3_totcapvsan"></td>
@@ -618,7 +664,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                           <td id="avs3_spacevmvsan"></td>
                           <td id="avs3_spacevmanf">N/A</td>
                           <td id="avs3_spacefree"></td>
-                          <td id="avs3_spacefreepervsan"></td>
+                          <!-- <td id="avs3_spacefreepervsan"></td> -->
                           <!-- <td id="avs3_profile"></td> -->
                           <td id="avs3_tcoavs"></td>
                           <td id="avs3_tcoanf">N/A</td>
@@ -629,9 +675,9 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                         <tr id="anf_ultra" class="">
                           <td id="avs4_profile"></td>
                           <!-- <td id="avs4_hosttype">AV36</td> -->
-                          <td id="avs4_vmcount"></td>
-                          <td id="avs4_storagevm"></td>
-                          <td id="avs4_totcapreq"></td>
+                          <!-- <td id="avs4_vmcount"></td>
+                          <td id="avs4_storagevm"></td> -->
+                          <td id="avs4_totcapreq"></td> 
                           <!--  <td id="avs4_totcapreqvsan"></td> -->
                           <td id="avs4_hostcount"></td>
                           <td id="avs4_totcapvsan"></td>
@@ -640,7 +686,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                           <td id="avs4_spacevmvsan"></td>
                           <td id="avs4_spacevmanf">N/A</td>
                           <td id="avs4_spacefree"></td>
-                          <td id="avs4_spacefreepervsan"></td>
+                          <!-- <td id="avs4_spacefreepervsan"></td> -->
                           <!-- <td id="avs4_profile"></td> -->
                           <td id="avs4_tcoavs"></td>
                           <td id="avs4_tcoanf">N/A</td>
@@ -649,11 +695,33 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                           <td id="avs4_tcoopt">N/A</td>
                         </tr>
                         <tr id="anf_standard" class="">
+                          <td id="avs7_profile"></td>
+                          <!-- <td id="avs7_hosttype">AV36</td> -->
+                          <!-- <td id="avs7_vmcount"></td>
+                          <td id="avs7_storagevm"></td> -->
+                          <td id="avs7_totcapreq"></td> 
+                          <!--  <td id="avs7_totcapreqvsan"></td> -->
+                          <td id="avs7_hostcount"></td>
+                          <td id="avs7_totcapvsan"></td>
+                          <td id="avs7_vsanover"></td>
+                          <!--  <td id="avs7_reqvmspace"></td> -->
+                          <td id="avs7_spacevmvsan"></td>
+                          <td id="avs7_spacevmanf">N/A</td>
+                          <td id="avs7_spacefree"></td>
+                          <!-- <td id="avs7_spacefreepervsan"></td> -->
+                          <!-- <td id="avs7_profile"></td> -->
+                          <td id="avs7_tcoavs"></td>
+                          <td id="avs7_tcoanf">N/A</td>
+                          <td id="avs7_tcototal"></td>
+                          <!-- <td id="avs7_anfsizing">*</td> -->
+                          <td id="avs7_tcoopt">N/A</td>
+                        </tr>
+                        <tr id="anf_dr" class="">
                           <td id="avs5_profile"></td>
                           <!-- <td id="avs5_hosttype">AV36</td> -->
-                          <td id="avs5_vmcount"></td>
-                          <td id="avs5_storagevm"></td>
-                          <td id="avs5_totcapreq"></td>
+                          <!-- <td id="avs5_vmcount"></td>
+                          <td id="avs5_storagevm"></td> -->
+                          <td id="avs5_totcapreq"></td> 
                           <!--  <td id="avs5_totcapreqvsan"></td> -->
                           <td id="avs5_hostcount"></td>
                           <td id="avs5_totcapvsan"></td>
@@ -662,7 +730,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                           <td id="avs5_spacevmvsan"></td>
                           <td id="avs5_spacevmanf">N/A</td>
                           <td id="avs5_spacefree"></td>
-                          <td id="avs5_spacefreepervsan"></td>
+                          <!-- <td id="avs5_spacefreepervsan"></td> -->
                           <!-- <td id="avs5_profile"></td> -->
                           <td id="avs5_tcoavs"></td>
                           <td id="avs5_tcoanf">N/A</td>
@@ -670,12 +738,12 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                           <!-- <td id="avs5_anfsizing">*</td> -->
                           <td id="avs5_tcoopt">N/A</td>
                         </tr>
-                        <tr id="anf_standard_zero" class=""> <!-- style="background-color: #e9ecef;" -->
+                        <tr id="anf_dr_zero" class=""> <!-- style="background-color: #e9ecef;" -->
                           <td id="avs6_profile"></td>
                           <!-- <td id="avs6_hosttype">AV36</td> -->
-                          <td id="avs6_vmcount"></td>
-                          <td id="avs6_storagevm"></td>
-                          <td id="avs6_totcapreq"></td>
+                          <!-- <td id="avs6_vmcount"></td>
+                          <td id="avs6_storagevm"></td> -->
+                          <td id="avs6_totcapreq"></td> 
                           <!--  <td id="avs6_totcapreqvsan"></td> -->
                           <td id="avs6_hostcount"></td>
                           <td id="avs6_totcapvsan"></td>
@@ -684,7 +752,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                           <td id="avs6_spacevmvsan"></td>
                           <td id="avs6_spacevmanf">N/A</td>
                           <td id="avs6_spacefree"></td>
-                          <td id="avs6_spacefreepervsan"></td>
+                          <!-- <td id="avs6_spacefreepervsan"></td> -->
                           <!-- <td id="avs6_profile"></td> -->
                           <td id="avs6_tcoavs"></td>
                           <td id="avs6_tcoanf">N/A</td>
