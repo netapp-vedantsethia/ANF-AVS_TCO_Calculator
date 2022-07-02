@@ -178,9 +178,16 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             //tco one year anf
             tcooneyearanf3 = spaceconvmanf * 0.32339 * 1024 * 12;
             datastoresize = spaceconvmanf / 8;
+            
+            //Ultra + Premium DS Combo
             ultrsdsfin = datastoresize * 2 * 0.43143 * 1024 * 12;
             premiumdsfin = datastoresize * 6 * 0.32339 * 1024 * 12;
-            tcooneyearanf4 = ultrsdsfin + premiumdsfin;
+
+            //Premium + Standard DS Combo
+            stddsfin = datastoresize * 4 * 0.16206 * 1024 * 12;
+            premiumdsfin1 = datastoresize * 4 * 0.32339 * 1024 * 12;
+
+            tcooneyearanf4 = stddsfin + premiumdsfin1;
             tcooneyearanf5 = totcapreq2 * 0.16206 * 1024 * 12;
             tcooneyearanf7 = spaceconvmanf * 0.16206 * 1024 * 12;
 
@@ -334,7 +341,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             document.getElementById("avs1_profile").innerText = "AVS-vSAN only - " + profile;
             //document.getElementById("avs2_profile").innerText = "AVS-vSAN with additional capacity";
             document.getElementById("avs3_profile").innerText = "AVS-vSAN with ANF with ANF Premium Tier";
-            document.getElementById("avs4_profile").innerText = "AVS-vSAN with ANF Ultra(2)/Premium Tier(6) (Perf optimized)";
+            document.getElementById("avs4_profile").innerText = "AVS-vSAN with ANF Premium/Standard Tier (Perf optimized)";
             document.getElementById("avs5_profile").innerText = "AVS-vSAN with ANF Standard Tier Pilot Light cluster";
             document.getElementById("avs6_profile").innerText = "AVS-vSAN with ANF Standard Tier zero Host Footprint";
             document.getElementById("avs7_profile").innerText = "AVS-vSAN with ANF Standard";
