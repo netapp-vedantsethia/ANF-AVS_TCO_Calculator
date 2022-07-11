@@ -54,14 +54,14 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             // calculator logic for driven by cpu
             avgcpu = 600 * vcpuvm;
             avgpeakcpuutilinccores = vmcount * avgcpu;
-            if(vcpupcore < 0)
+            if(vcpupcore <= 0)
             {
               vcpu_pcpucalc = 0;
             }
             else{
               vcpu_pcpucalc = avgpeakcpuutilinccores/vcpupcore;
             }
-            
+
             //avgpeakcpuutil = avgcpu * 15 / 100;
             //totpeakcpuutil = avgcpu * vmcount;
             //mhzperhost = 82800;
@@ -95,7 +95,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             }else {
               finalhostcountanf = hostreqpercalc;
             }
-            
+
             //Driven by Additional Storage
             totreqcapstrg = totcapreq1 + addstrgc + addstrgp + addstrfs;
             nohostreqaddnstrg = totreqcapstrg / usablecap;
@@ -138,7 +138,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             freespaceav2 = totcapvsan2 - (vsanoverhead2 + totcapreq2);
             freespaceav3 = totcapvsan3 - (vsanoverhead3 + spaceconvmvsan);
             freespaceav5 = totcapvsan5 - (vsanoverhead5 + 20);
-            
+
             /*if(freespaceav2 < 0)
             {
                 do
@@ -149,7 +149,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                 freespaceav2 = totcapvsan2 - (vsanoverhead2 + totcapreq2);
               }while((freespaceav2 < 0));
             }*/
-            
+
 
             //free space percent vsan
             if(totcapvsan1 == 0){
@@ -178,7 +178,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
             //tco one year anf
             tcooneyearanf3 = spaceconvmanf * 0.32339 * 1024 * 12;
             datastoresize = spaceconvmanf / 8;
-            
+
             //Ultra + Premium DS Combo
             ultrsdsfin = datastoresize * 2 * 0.43143 * 1024 * 12;
             premiumdsfin = datastoresize * 6 * 0.32339 * 1024 * 12;
@@ -594,7 +594,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                   </div>
                 </div>
 
-                
+
 
                 <div class="">
                   <div class="mb-3">
@@ -648,7 +648,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                 </div>
 
 
-                
+
 
 
                 <hr>
@@ -663,7 +663,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                                 <!-- <th class="align-top">VM Count</th> -->
                                 <!-- <th class="align-top">Per VM Storage <br><small class="text-muted">(GB)</small></th> -->
                                 <!-- <th class="align-top">Total Capacity Required</th> -->
-                                <th class="align-top">Total Capacity Required VSAN</th> 
+                                <th class="align-top">Total Capacity Required VSAN</th>
                                 <th class="align-top">Host Count</th>
                                 <th class="align-top">Total Capacity VSAN <br><small class="text-muted">(TB)</small></th>
                                 <th class="align-top">VSAN Overhead <br><small class="text-muted">(TB)</small></th>
@@ -685,24 +685,24 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                         </tr>
                        <!-- <tr>
                           <td id="avs1_profile"></td>
-                           <td id="avs1_hosttype">AV36</td> 
-                          <td id="avs1_vmcount"></td> 
-                          <td id="avs1_storagevm"></td> 
-                          <td id="avs1_totcapreq"></td> 
-                           <td id="avs1_totcapreqvsan"></td> 
+                           <td id="avs1_hosttype">AV36</td>
+                          <td id="avs1_vmcount"></td>
+                          <td id="avs1_storagevm"></td>
+                          <td id="avs1_totcapreq"></td>
+                           <td id="avs1_totcapreqvsan"></td>
                           <td id="avs1_hostcount"></td>
                           <td id="avs1_totcapvsan"></td>
                           <td id="avs1_vsanover"></td>
-                          <td id="avs1_reqvmspace"></td> 
+                          <td id="avs1_reqvmspace"></td>
                           <td id="avs1_spacevmvsan"></td>
                           <td id="avs1_spacevmanf">N/A</td>
                           <td id="avs1_spacefree"></td>
                          <td id="avs1_spacefreepervsan"></td>
-                           <td id="avs1_profile"></td> 
+                           <td id="avs1_profile"></td>
                           <td id="avs1_tcoavs"></td>
                           <td id="avs1_tcoanf">N/A</td>
                           <td id="avs1_tcototal"></td>
-                          <td id="avs1_anfsizing">*</td> 
+                          <td id="avs1_anfsizing">*</td>
                           <td id="avs1_tcoopt">N/A</td>
                         </tr> -->
                         <tr>
@@ -710,7 +710,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                           <!-- <td id="avs2_hosttype">AV36</td> -->
                           <!-- <td id="avs2_vmcount"></td>
                           <td id="avs2_storagevm"></td> -->
-                          <td id="avs2_totcapreq"></td> 
+                          <td id="avs2_totcapreq"></td>
                           <!--  <td id="avs2_totcapreqvsan"></td> -->
                           <td id="avs2_hostcount"></td>
                           <td id="avs2_totcapvsan"></td>
@@ -735,7 +735,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                           <!-- <td id="avs3_hosttype">AV36</td> -->
                           <!-- <td id="avs3_vmcount"></td>
                           <td id="avs3_storagevm"></td> -->
-                          <td id="avs3_totcapreq"></td> 
+                          <td id="avs3_totcapreq"></td>
                           <!--  <td id="avs3_totcapreqvsan"></td> -->
                           <td id="avs3_hostcount"></td>
                           <td id="avs3_totcapvsan"></td>
@@ -757,7 +757,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                           <!-- <td id="avs4_hosttype">AV36</td> -->
                           <!-- <td id="avs4_vmcount"></td>
                           <td id="avs4_storagevm"></td> -->
-                          <td id="avs4_totcapreq"></td> 
+                          <td id="avs4_totcapreq"></td>
                           <!--  <td id="avs4_totcapreqvsan"></td> -->
                           <td id="avs4_hostcount"></td>
                           <td id="avs4_totcapvsan"></td>
@@ -779,7 +779,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                           <!-- <td id="avs7_hosttype">AV36</td> -->
                           <!-- <td id="avs7_vmcount"></td>
                           <td id="avs7_storagevm"></td> -->
-                          <td id="avs7_totcapreq"></td> 
+                          <td id="avs7_totcapreq"></td>
                           <!--  <td id="avs7_totcapreqvsan"></td> -->
                           <td id="avs7_hostcount"></td>
                           <td id="avs7_totcapvsan"></td>
@@ -801,7 +801,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                           <!-- <td id="avs5_hosttype">AV36</td> -->
                           <!-- <td id="avs5_vmcount"></td>
                           <td id="avs5_storagevm"></td> -->
-                          <td id="avs5_totcapreq"></td> 
+                          <td id="avs5_totcapreq"></td>
                           <!--  <td id="avs5_totcapreqvsan"></td> -->
                           <td id="avs5_hostcount"></td>
                           <td id="avs5_totcapvsan"></td>
@@ -823,7 +823,7 @@ Developers: Vedant Sethia (vedant.sethia@netapp.com), Dhruv Tyagi (dhruv.tyagi@n
                           <!-- <td id="avs6_hosttype">AV36</td> -->
                           <!-- <td id="avs6_vmcount"></td>
                           <td id="avs6_storagevm"></td> -->
-                          <td id="avs6_totcapreq"></td> 
+                          <td id="avs6_totcapreq"></td>
                           <!--  <td id="avs6_totcapreqvsan"></td> -->
                           <td id="avs6_hostcount"></td>
                           <td id="avs6_totcapvsan"></td>
